@@ -1,6 +1,7 @@
 import {GitHubBanner, Refine, WelcomePage} from "@refinedev/core";
 import {DevtoolsPanel, DevtoolsProvider} from "@refinedev/devtools";
 import {RefineKbar, RefineKbarProvider} from "@refinedev/kbar";
+// import meta.env.VITE_BACKEND_BASE_URL
 
 import routerProvider, {
     DocumentTitleHandler,

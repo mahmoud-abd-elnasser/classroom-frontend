@@ -1,48 +1,69 @@
-export const DEPARTMENTS = ['CS', 'Math', 'English']
-export const DEPARTMENT_OPTIONS = DEPARTMENTS.map((department) => ({
-    value: department,
-    label: department
-}))
+import { GraduationCap, School } from "lucide-react";
 
-export const MOCK_SUBJECTS = [
+export const USER_ROLES = {
+    STUDENT: "student",
+    TEACHER: "teacher",
+    ADMIN: "admin",
+};
+
+export const ROLE_OPTIONS = [
     {
-        id: 1,
-        name: "Introduction to Computer Science",
-        code: "CS101",
-        description: "An introductory course on computer science concepts.",
-        department: "CS",
-        created_at: "2024-01-01T00:00:00.000Z"
+        value: USER_ROLES.STUDENT,
+        label: "Student",
+        icon: GraduationCap,
     },
     {
-        id: 2,
-        name: "Data Structures and Algorithms",
-        code: "CS201",
-        description: "Study of common data structures and algorithms.",
-        department: "CS",
-        created_at: "2024-01-05T00:00:00.000Z"
+        value: USER_ROLES.TEACHER,
+        label: "Teacher",
+        icon: School,
     },
-    {
-        id: 3,
-        name: "Calculus I",
-        code: "MATH101",
-        description: "Introduction to differential and integral calculus.",
-        department: "Math",
-        created_at: "2024-01-10T00:00:00.000Z"
-    },
-    {
-        id: 4,
-        name: "Linear Algebra",
-        code: "MATH201",
-        description: "Study of systems of linear equations and matrices.",
-        department: "Math",
-        created_at: "2024-01-15T00:00:00.000Z"
-    },
-    {
-        id: 5,
-        name: "English Literature",
-        code: "ENG101",
-        description: "Introduction to major works of English literature.",
-        department: "English",
-        created_at: "2024-01-20T00:00:00.000Z"
-    }
-]
+];
+
+export const DEPARTMENTS = [
+    "Computer Science",
+    "Mathematics",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "English",
+    "History",
+    "Geography",
+    "Economics",
+    "Business Administration",
+    "Engineering",
+    "Psychology",
+    "Sociology",
+    "Political Science",
+    "Philosophy",
+    "Education",
+    "Fine Arts",
+    "Music",
+    "Physical Education",
+    "Law",
+] as const;
+
+export const DEPARTMENT_OPTIONS = DEPARTMENTS.map((dept) => ({
+    value: dept,
+    label: dept,
+}));
+
+export const MAX_FILE_SIZE = 3 * 1024 * 1024; // 3MB in bytes
+export const ALLOWED_TYPES = [
+    "image/png",
+    "image/jpeg",
+    "image/jpg",
+    "image/webp",
+];
+
+export const CLOUDINARY_UPLOAD_URL = import.meta.env.VITE_CLOUDINARY_UPLOAD_URL;
+export const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+export const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL;
+
+export const BASE_URL = import.meta.env.VITE_API_URL;
+export const ACCESS_TOKEN_KEY = import.meta.env.VITE_ACCESS_TOKEN_KEY;
+export const REFRESH_TOKEN_KEY = import.meta.env.VITE_REFRESH_TOKEN_KEY;
+
+export const REFRESH_TOKEN_URL = `${BASE_URL}/refresh-token`;
+
+export const CLOUDINARY_UPLOAD_PRESET = import.meta.env
+    .VITE_CLOUDINARY_UPLOAD_PRESET;
