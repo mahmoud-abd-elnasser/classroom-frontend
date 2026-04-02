@@ -1,8 +1,8 @@
-import { CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET } from "@/constants";
-import { Trash, UploadCloud } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { Button } from "./ui/button";
-import { UploadWidgetProps, UploadWidgetValue } from "@/types";
+import {CLOUDINARY_CLOUD_NAME, CLOUDINARY_UPLOAD_PRESET} from "@/constants";
+import {Trash, UploadCloud} from "lucide-react";
+import {useEffect, useRef, useState} from "react";
+import {Button} from "./ui/button";
+import {UploadWidgetProps, UploadWidgetValue} from "@/types";
 
 function UploadWidget({
                           value = null,
@@ -89,20 +89,23 @@ function UploadWidget({
                 const params = new URLSearchParams();
                 params.append("token", deleteToken);
 
-                await fetch(
+                const response = await fetch(
                     `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/delete_by_token`,
                     {
                         method: "POST",
                         body: params,
                     }
                 );
+                if (!response.ok) {
+                    throw new Error(`Cloudinary delete failed with ${response.status}`);
+                }
             }
-        } catch (error) {
-            console.error("Failed to remove image from Cloudinary", error);
-        } finally {
             setPreview(null);
             setDeleteToken(null);
             onChangeRef.current?.(null);
+        } catch (error) {
+            console.error("Failed to remove image from Cloudinary", error);
+        } finally {
             setIsRemoving(false);
         }
     };
@@ -111,12 +114,13 @@ function UploadWidget({
         <div className="space-y-2">
             {preview ? (
                 <div className="upload-preview">
-                    <img src={preview.url} alt="Uploaded file" />
+                    <img src={preview.url} alt="Uploaded file"/>
 
                     <Button
                         type="button"
                         size="icon"
                         variant="destructive"
+                        aria-label="Remove uploaded image"
                         onClick={removeFromCloudinary}
                         disabled={isRemoving || disabled}
                     >
@@ -137,7 +141,7 @@ function UploadWidget({
                     }}
                 >
                     <div className="upload-prompt">
-                        <UploadCloud className="icon" />
+                        <UploadCloud className="icon"/>
                         <div>
                             <p>Click to upload photo</p>
                             <p>PNG, JPG up to 5MB</p>

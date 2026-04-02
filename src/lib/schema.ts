@@ -34,7 +34,7 @@ export const classSchema = z.object({
         .min(2, "Class name must be at least 2 characters")
         .max(50, "Class name must be at most 50 characters"),
     description: z
-        .string({ required_error: "Description is required" })
+        .string({required_error: "Description is required"})
         .min(5, "Description must be at least 5 characters"),
     subjectId: z.coerce
         .number({
@@ -48,13 +48,14 @@ export const classSchema = z.object({
             required_error: "Capacity is required",
             invalid_type_error: "Capacity is required",
         })
+        .int("Capacity must be a whole number")
         .min(1, "Capacity must be at least 1"),
     status: z.enum(["active", "inactive"]),
     bannerUrl: z
-        .string({ required_error: "Class banner is required" })
+        .string({required_error: "Class banner is required"})
         .min(1, "Class banner is required"),
     bannerCldPubId: z
-        .string({ required_error: "Banner reference is required" })
+        .string({required_error: "Banner reference is required"})
         .min(1, "Banner reference is required"),
     inviteCode: z.string().optional(),
     schedules: z.array(scheduleSchema).optional(),

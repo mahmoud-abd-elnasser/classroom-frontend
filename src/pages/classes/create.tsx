@@ -29,7 +29,7 @@ import {Loader2} from "lucide-react";
 import {classSchema} from "@/lib/schema";
 import UploadWidget from "@/components/upload-widget";
 import {Subject, User} from "@/types";
-import z from "zod";
+import {z} from "zod";
 
 const ClassesCreate = () => {
     const back = useBack();
@@ -327,7 +327,12 @@ const ClassesCreate = () => {
 
                                 <Separator/>
 
-                                <Button type="submit" size="lg" className="w-full">
+                                <Button
+                                    type="submit"
+                                    size="lg"
+                                    className="w-full"
+                                    disabled={isSubmitting}
+                                >
                                     {isSubmitting ? (
                                         <div className="flex gap-1">
                                             <span>Creating Class...</span>
