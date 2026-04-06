@@ -51,7 +51,7 @@ export const SignUpForm = () => {
     }
 
     register({
-      email,
+      email: email.toLowerCase().trim(),
       password,
     });
   };

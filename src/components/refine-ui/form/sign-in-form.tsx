@@ -36,7 +36,7 @@ export const SignInForm = () => {
     e.preventDefault();
 
     login({
-      email,
+      email: email.toLowerCase().trim(),
       password,
     });
   };
