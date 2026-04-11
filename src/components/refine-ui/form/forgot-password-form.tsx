@@ -29,7 +29,7 @@ export const ForgotPasswordForm = () => {
     e.preventDefault();
 
     forgotPassword({
-      email: email.toLowerCase().trim(),
+      email,
     });
   };
 

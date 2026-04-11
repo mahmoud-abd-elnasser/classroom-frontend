@@ -1,90 +1,88 @@
-import {createDataProvider, CreateDataProviderOptions} from "@refinedev/rest";
-import {BACKEND_BASE_URL} from "@/constants";
-import {CreateResponse, GetOneResponse, ListResponse} from "@/types";
-import {HttpError} from "@refinedev/core";
+import { createDataProvider, CreateDataProviderOptions } from "@refinedev/rest";
 
-if (!BACKEND_BASE_URL) {
-    throw new Error('BACKEND_BASE_URL is not defined')
-}
-
-const buildHttpError = async (response: Response): Promise<HttpError> => {
-    let message = 'Request failed.'
-
-    try {
-        const payload = (await response.json()) as { message?: string }
-
-        if (payload?.message) message = payload.message
-
-    } catch {
-
-    }
-
-    return {
-        message,
-        statusCode: response.status
-    }
-}
+import { CreateResponse, GetOneResponse, ListResponse } from "@/types";
+import { BACKEND_BASE_URL } from "@/constants";
 
 const options: CreateDataProviderOptions = {
-    getList: {
-        getEndpoint: ({resource}) => resource,
-        buildQueryParams: async ({resource, pagination, filters}) => {
-            const page = pagination?.currentPage ?? 1;
-            const pageSize = pagination?.pageSize ?? 10;
+  getList: {
+    getEndpoint: ({ resource }) => resource,
 
-            const params: Record<string, string | number> = {page, limit: pageSize}
+    buildQueryParams: async ({ resource, pagination, filters }) => {
+      const params: Record<string, string | number> = {};
 
-            filters?.forEach((filter) => {
-                const field = 'field' in filter ? filter.field : ''
-                const value = String(filter.value)
-                if (resource === 'subjects') {
-                    if (field === 'department') params.department = value
-                    if (field === 'name' || field === 'code') params.search = value
-                }
-                if (resource === 'classes') {
-                    if (field === 'name') params.search = value
-                    if (field === 'subject') params.subject = value
-                    if (field === 'teacher') params.teacher = value
-                }
-            })
-            return params
-        },
-        mapResponse: async (response) => {
-            if (!response.ok) {
-                throw await buildHttpError(response)
-            }
-            const payload: ListResponse = await response.clone().json()
-            return payload.data ?? []
-        },
-        getTotalCount: async (response) => {
-            if (!response.ok) {
-                throw await buildHttpError(response)
-            }
-            const payload: ListResponse = await response.json()
-            return payload.pagination?.total ?? payload.data?.length ?? 0
+      if (pagination?.mode !== "off") {
+        const page = pagination?.currentPage ?? 1;
+        const pageSize = pagination?.pageSize ?? 10;
+
+        params.page = page;
+        params.limit = pageSize;
+      }
+
+      filters?.forEach((filter) => {
+        const field = "field" in filter ? filter.field : "";
+        const value = String(filter.value);
+
+        if (field === "role") {
+          params.role = value;
         }
+
+        if (resource === "departments") {
+          if (field === "name" || field === "code") params.search = value;
+        }
+
+        if (resource === "users") {
+          if (field === "search" || field === "name" || field === "email") {
+            params.search = value;
+          }
+        }
+
+        if (resource === "subjects") {
+          if (field === "department") params.department = value;
+          if (field === "name" || field === "code") params.search = value;
+        }
+
+        if (resource === "classes") {
+          if (field === "name") params.search = value;
+          if (field === "subject") params.subject = value;
+          if (field === "teacher") params.teacher = value;
+        }
+      });
+
+      return params;
     },
-    create: {
-        getEndpoint: ({resource}) => resource,
-        buildBodyParams: async ({variables}) => variables,
-        mapResponse: async (response) => {
-            const json: CreateResponse = await response.json()
-            return json.data ?? []
-        }
+
+    mapResponse: async (response) => {
+      const payload: ListResponse = await response.json();
+      return payload.data ?? [];
     },
-    getOne: {
-        getEndpoint: ({resource, id}) => `${resource}/${id}`,
-        mapResponse: async (response) => {
-            if (!response.ok) {
-                throw await buildHttpError(response)
-            }
-            const json: GetOneResponse = await response.json()
-            return json.data
-        }
-    }
-}
 
-const {dataProvider} = createDataProvider(BACKEND_BASE_URL, options)
+    getTotalCount: async (response) => {
+      const payload: ListResponse = await response.json();
+      return payload.pagination?.total ?? payload.data?.length ?? 0;
+    },
+  },
 
-export {dataProvider}
+  create: {
+    getEndpoint: ({ resource }) => resource,
 
+    buildBodyParams: async ({ variables }) => variables,
+
+    mapResponse: async (response) => {
+      const json: CreateResponse = await response.json();
+      return json.data ?? {};
+    },
+  },
+
+  getOne: {
+    getEndpoint: ({ resource, id }) => `${resource}/${id}`,
+
+    mapResponse: async (response) => {
+      const json: GetOneResponse = await response.json();
+      return json.data ?? {};
+    },
+  },
+};
+
+const { dataProvider } = createDataProvider(BACKEND_BASE_URL, options);
+
+export { dataProvider };
