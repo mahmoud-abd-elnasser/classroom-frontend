@@ -13,8 +13,12 @@ const ShowClass = () => {
     const {query} = useShow<ClassDetails>({resource: "classes"})
     const classDetails = query.data?.data
     const {isLoading, isError} = query
+    const hasValidClassDetails =
+        !!classDetails &&
+        !Array.isArray(classDetails) &&
+        typeof classDetails.status === "string"
 
-    if (isLoading || isError || !classDetails) {
+    if (isLoading || isError || !hasValidClassDetails) {
         return (
             <ShowView className="class-view class-show">
                 <ShowViewHeader resource="classes" title="Class Details"/>
@@ -46,7 +50,13 @@ const ShowClass = () => {
         <ShowView className="class-view class-show">
             <ShowViewHeader resource="classes" title="Class Details"/>
             <div className="banner">
-                {bannerUrl ? <AdvancedImage alt="Class Banner" cldImg={bannerPhoto(bannerCldPubId ?? '',name)} /> : <div className="placeholder"/>}
+                {bannerCldPubId ? (
+                    <AdvancedImage alt="Class Banner" cldImg={bannerPhoto(bannerCldPubId, name)}/>
+                ) : bannerUrl ? (
+                    <img src={bannerUrl} alt="Class Banner"/>
+                ) : (
+                    <div className="placeholder"/>
+                )}
                 <Card className="details-card">
                     <div className="details-header">
                         <div>
@@ -56,31 +66,31 @@ const ShowClass = () => {
                         <div>
                             <Badge variant="outline">{capacity} spots</Badge>
                             <Badge variant={status === "active" ? "default" : "secondary"}
-                            data-state={status}>{status.toUpperCase()}</Badge>
+                                   data-state={status}>{status.toUpperCase()}</Badge>
                         </div>
                     </div>
                     <div>
-                    <div className="instructor">
-                    <p>Instructor</p>
-                        <div>
-                            <img src={teacher?.image ?? placeholderUrl} alt="Teacher Image"/>
+                        <div className="instructor">
+                            <p>Instructor</p>
                             <div>
-                                <p>{teacherName}</p>
-                                <p>{teacher?.email}</p>
+                                <img src={teacher?.image ?? placeholderUrl} alt="Teacher Image"/>
+                                <div>
+                                    <p>{teacherName}</p>
+                                    <p>{teacher?.email}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                        <div className='department'>
+                        <div className="department">
                             <p>Department</p>
                             <div>
-                            <p>{department?.name}</p>
-                            <p>{department?.description}</p>
+                                <p>{department?.name}</p>
+                                <p>{department?.description}</p>
 
                             </div>
                         </div>
                     </div>
                     <Separator/>
-                    <div className='subject'>
+                    <div className="subject">
                         <p>Subject</p>
                         <div>
                             <Badge variant="outline">Code : {subject?.code}</Badge>
@@ -91,7 +101,7 @@ const ShowClass = () => {
 
                     </div>
                     <Separator/>
-                    <div className='join'>
+                    <div className="join">
                         <h2>Join Class</h2>
                         <ol>
                             <li>Ask your teacher for the invite code</li>
